@@ -1,13 +1,19 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 app.use(express.static('build'))
 
+const mongoose = require('mongoose')
+
+const url =
+  `mongodb+srv://fullstackPart3:${password}@cluster0.4qd2h.mongodb.net/phonebook?retryWrites=true&w=majority`
 
 morgan.token('body', (req, res) => {
   if (req.method === 'POST') {
@@ -19,32 +25,19 @@ morgan.token('body', (req, res) => {
 })
 
 {
-let persons = [
-    {
-      "name": "Arto Hellas",
-      "number": "040-1",
-      "id": 1
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": 3
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 4
-    }
-  ]
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+})
 
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    
+  Person.find({}).then(persons => {
+    response.json(persons.map(person => person.toJSON()))
+  })
 })
 
 app.get('/info', (request, response) => {
@@ -97,7 +90,7 @@ app.post('/api/persons', (request, response) => {
     response.json(person)
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

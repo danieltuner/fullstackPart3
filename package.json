@@ -27,6 +27,7 @@
   "homepage": "https://github.com/danieltuner/fullstackPart3#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "heroku": "^7.45.0",
     "mongoose": "^5.10.9",
