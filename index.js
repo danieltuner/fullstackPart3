@@ -12,8 +12,6 @@ app.use(express.static('build'))
 
 const mongoose = require('mongoose')
 
-const url =
-  `mongodb+srv://fullstackPart3:${password}@cluster0.4qd2h.mongodb.net/phonebook?retryWrites=true&w=majority`
 
 morgan.token('body', (req, res) => {
   if (req.method === 'POST') {
@@ -25,7 +23,7 @@ morgan.token('body', (req, res) => {
 })
 
 {
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+
 
 const personSchema = new mongoose.Schema({
   name: String,
@@ -46,31 +44,38 @@ app.get('/info', (request, response) => {
     response.send(`<p>${info}</p><p>${time}</p>`)
 })
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
+app.get('/api/persons/:id', (request, response, next) => {
+    Person.findById(request.params.id)
+      .then(person => {
+        if (person) {
+          response.json(person)
+        }
+        else {
+          response.status(404).end()
+        }
+      })
     
-    if (person) {
-        response.json(person)
-    } 
-    else {
-        response.status(404).end()
-    }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-  
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+  .then(result => {
     response.status(204).end()
+  })
+  .catch(error => next(error))
   })
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (!body.name || !body.number) {
+    if (body.name === undefined) {
       return response.status(400).json({
-        error: 'The name or number is missing'
+        error: 'The name is missing'
+      })
+    }
+    if (body.number === undefined) {
+      return response.status(400).json({
+        error: 'The number is missing'
       })
     }
     if (!persons.every(p => p.name !== body.name)) {
