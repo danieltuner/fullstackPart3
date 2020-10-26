@@ -37,7 +37,7 @@ app.get('/info', (request, response) => {
     Person.find({}).then(people => {
       const info = `Phonebook has information of ${people.length} people.`
       const time = Date()
-      res.send(`<p>${info}</p><p>${time}</p>`)
+      response.send(`<p>${info}</p><p>${time}</p>`)
     })
 })
 
@@ -63,7 +63,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
   .catch(error => next(error))
   })
 
-  app.put('/api/persons/:id', (request, response, next) => {
+app.put('/api/persons/:id', (request, response, next) => {
     const body = request.body
 
     const person = {
