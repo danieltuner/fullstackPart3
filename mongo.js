@@ -22,21 +22,21 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 if (name === undefined || number === undefined) {
-    Person
-        .find({})
-        .then(persons => {
-            console.log("Phonebook:")
-            persons.map(person => console.log(person.name, person.number))
-            mongoose.connection.close()
-        })
-} else {
-    const person = new Person({
-        name: name,
-        number: number
+  Person
+    .find({})
+    .then(persons => {
+      console.log('Phonebook:')
+      persons.map(person => console.log(person.name, person.number))
+      mongoose.connection.close()
     })
+} else {
+  const person = new Person({
+    name: name,
+    number: number
+  })
 
-person.save().then(result => {
-  console.log(`The name ${name} and the number ${number} was added to the phonebook`)
-  mongoose.connection.close()
-})
+  person.save().then(result => {
+    console.log(`The name ${name} and the number ${number} was added to the phonebook`)
+    mongoose.connection.close()
+  })
 }

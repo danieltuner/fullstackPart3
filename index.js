@@ -26,22 +26,22 @@ morgan.token('body', (request, response) => {
 {
 
 
-app.get('/api/persons', (request, response) => {
-    
-  Person.find({}).then(persons => {
-    response.json(persons.map(person => person.toJSON()))
-  })
-})
+  app.get('/api/persons', (request, response) => {
 
-app.get('/info', (request, response) => {
+    Person.find({}).then(persons => {
+      response.json(persons.map(person => person.toJSON()))
+    })
+  })
+
+  app.get('/info', (request, response) => {
     Person.find({}).then(people => {
       const info = `Phonebook has information of ${people.length} people.`
       const time = Date()
       response.send(`<p>${info}</p><p>${time}</p>`)
     })
-})
+  })
 
-app.get('/api/persons/:id', (request, response, next) => {
+  app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id)
       .then(person => {
         if (person) {
@@ -52,18 +52,18 @@ app.get('/api/persons/:id', (request, response, next) => {
         }
       })
       .catch(error => next(error))
-    
-})
 
-app.delete('/api/persons/:id', (request, response, next) => {
-  Person.findByIdAndRemove(request.params.id)
-  .then(result => {
-    response.status(204).end()
-  })
-  .catch(error => next(error))
   })
 
-app.put('/api/persons/:id', (request, response, next) => {
+  app.delete('/api/persons/:id', (request, response, next) => {
+    Person.findByIdAndRemove(request.params.id)
+      .then(result => {
+        response.status(204).end()
+      })
+      .catch(error => next(error))
+  })
+
+  app.put('/api/persons/:id', (request, response, next) => {
     const body = request.body
 
     const person = {
@@ -78,7 +78,7 @@ app.put('/api/persons/:id', (request, response, next) => {
       .catch(error => next(error))
   })
 
-app.post('/api/persons', (request, response, next) => {
+  app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     if (body.name === undefined) {
@@ -91,26 +91,26 @@ app.post('/api/persons', (request, response, next) => {
         error: 'The number is missing'
       })
     }
-        
+
     const person = new Person({
-        id: Math.floor(Math.random() * 5000),
-        name: body.name,
-        number: body.number,
+      id: Math.floor(Math.random() * 5000),
+      name: body.name,
+      number: body.number,
     })
-    
+
     person.save().then(savedPerson => {
       response.json(savedPerson.toJSON)
     })
-    .catch(error => next(error))
-})
+      .catch(error => next(error))
+  })
   const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
     if (error.name === 'CastError') {
-      return response.status(400).send({error: 'malformatted id'})
+      return response.status(400).send({ error: 'malformatted id' })
     }
     else if (error.name === 'ValidationError') {
-      return response.status(400).json({error: error.message})
+      return response.status(400).json({ error: error.message })
     }
     next(error)
   }
@@ -124,8 +124,8 @@ app.post('/api/persons', (request, response, next) => {
 
 
 
-const PORT = process.env.PORT
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+  const PORT = process.env.PORT
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+  })
 }
