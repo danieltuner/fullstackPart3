@@ -10,11 +10,10 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.use(cors())
 app.use(express.static('build'))
 
-const mongoose = require('mongoose')
-const { request, response } = require('express')
 
 
-morgan.token('body', (request, response) => {
+
+morgan.token('body', (request) => {
   if (request.method === 'POST') {
     return JSON.stringify(request.body)
   }
@@ -57,7 +56,7 @@ morgan.token('body', (request, response) => {
 
   app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
-      .then(result => {
+      .then(() => {
         response.status(204).end()
       })
       .catch(error => next(error))
