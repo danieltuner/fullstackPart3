@@ -70,7 +70,7 @@ morgan.token('body', (request) => {
       number: body.number,
     }
 
-    Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true })
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
       .then(updatedPerson => {
         response.json(updatedPerson)
       })
