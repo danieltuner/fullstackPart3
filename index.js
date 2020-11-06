@@ -92,7 +92,6 @@ morgan.token('body', (request) => {
     }
 
     const person = new Person({
-      id: Math.floor(Math.random() * 5000),
       name: body.name,
       number: body.number,
     })
