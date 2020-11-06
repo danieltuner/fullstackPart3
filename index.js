@@ -97,7 +97,7 @@ morgan.token('body', (request) => {
     })
 
     person.save().then(savedPerson => {
-      response.json(savedPerson.toJSON)
+      response.json(savedPerson)
     })
       .catch(error => next(error))
   })
